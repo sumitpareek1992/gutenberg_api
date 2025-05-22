@@ -139,21 +139,6 @@ GET /api/books/?language=en&topic=children&author=dickens
 
 ---
 
-## 🧼 Best Practices
-
-- Uses Django REST Framework
-- API docs via Swagger (`drf-yasg`)
-- Environment-based settings
-- Clean filtering and pagination logic
-- Exception handling and validation
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
 
 ## 🙋 Author
 
