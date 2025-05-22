@@ -1,7 +1,16 @@
 # serializers.py
 from rest_framework import serializers
 from books_store.models import Book, Author, Language, Subject, Bookshelf, Format
-
+GENRE_MAP = {
+    "Science fiction": "Science Fiction",
+    "Children": "Children",
+    "Historical": "Historical Fiction",
+    "Romance": "Romance",
+    "Mystery": "Mystery",
+    "Fantasy": "Fantasy",
+    "Adventure": "Adventure",
+    "Poetry": "Poetry"
+}
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
@@ -34,10 +43,19 @@ class BookSerializer(serializers.ModelSerializer):
     bookshelves = BookshelfSerializer(many=True)
     formats = serializers.SerializerMethodField()
     book_id = serializers.IntegerField(source='gutenberg_id')
+    genre = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Book
-        fields = ['title', 'authors', 'languages', 'subjects', 'bookshelves', 'formats','book_id']
+        fields = ['title','genre', 'authors', 'languages', 'subjects', 'bookshelves', 'formats','book_id']
 
     def get_formats(self, obj):
         return FormatSerializer(obj.get_formats(), many=True).data
+    def get_genre(self, obj):
+        keywords = list(obj.bookshelves.values_list('name', flat=True)) + list(obj.subjects.values_list('name', flat=True))
+        for keyword in keywords:
+            for key, genre in GENRE_MAP.items():
+                if key.lower() in keyword.lower():
+                    return genre
+        return "Unknown"

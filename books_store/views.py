@@ -11,12 +11,15 @@ from .serializers import BookSerializer
 from tools.swagger import get_queryfield
 from rest_framework import status
 from django.db.models import Q
+import logging
+logger = logging.getLogger(__name__)
 
 
 
 
 class MyPagination(PageNumberPagination):
     page_size = 25  # Default page size
+    max_page_size = 25
     def get_page_count(self):
         return self.page.paginator.num_pages
     
@@ -48,10 +51,10 @@ class BookListAPIView(ListAPIView):
             if gutenberg_id:
                 gutenberg_ids = gutenberg_id.split(",")
                 queryset = queryset.filter(gutenberg_id__in=gutenberg_ids)
-
+            import pdb; pdb.set_trace()
             language = request.GET.get('language')
             if language:
-                languages = language.split(",")
+                languages = [l.strip() for l in language.split(',') if l.strip()]
                 queryset = queryset.filter(languages__code__in=languages)
 
             mime_type = request.GET.get('mime_type')
@@ -91,16 +94,16 @@ class BookListAPIView(ListAPIView):
                 result_page = paginator.paginate_queryset(queryset, request)
             except Exception as e:
                 return Response({"message": PAGE_NOT_FOUND,"status":False}, status=status.HTTP_404_NOT_FOUND)
-            
+            1/0
             serializer = self.get_serializer(result_page, many=True)
             res_data["message"] = "Books fetch successfully"
             res_data["status"] = True
-            print(len(serializer.data))
             res_data["books"] = serializer.data
             res_data["total_recors"] = queryset.count()
             res_data['page_count'] = paginator.get_page_count()
             res_data['current_page'] = paginator.get_current_page()
             return Response(res_data, status=status.HTTP_200_OK)
-        except Exception:
+        except Exception as e:
+            logger.exception(f"Error occurred in BookListAPIView=={e}")
             return Response({"status":False, "message":ERROR_500},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

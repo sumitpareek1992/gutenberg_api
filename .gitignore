@@ -4,3 +4,4 @@ tools/__pycache__/
 books_store/migrations/
 books/__pycache__/
 .env
+django_errors.log
