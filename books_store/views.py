@@ -51,7 +51,6 @@ class BookListAPIView(ListAPIView):
             if gutenberg_id:
                 gutenberg_ids = gutenberg_id.split(",")
                 queryset = queryset.filter(gutenberg_id__in=gutenberg_ids)
-            import pdb; pdb.set_trace()
             language = request.GET.get('language')
             if language:
                 languages = [l.strip() for l in language.split(',') if l.strip()]
@@ -94,7 +93,6 @@ class BookListAPIView(ListAPIView):
                 result_page = paginator.paginate_queryset(queryset, request)
             except Exception as e:
                 return Response({"message": PAGE_NOT_FOUND,"status":False}, status=status.HTTP_404_NOT_FOUND)
-            1/0
             serializer = self.get_serializer(result_page, many=True)
             res_data["message"] = "Books fetch successfully"
             res_data["status"] = True
