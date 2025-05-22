@@ -24,12 +24,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="GlutenBerg",
+        title="GutenBerg",
         default_version='v1',
-        description="All endpoints for Glutenberg",
+        description="All endpoints for Gutenberg",
         terms_of_service="",
         contact=openapi.Contact(email="sumit.pareek1992@gmail.com"),
-        license=openapi.License(name="License reserved for Glutenberg project"),
+        license=openapi.License(name="License reserved for Gutenberg project"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
